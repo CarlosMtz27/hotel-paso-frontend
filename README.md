@@ -1,4 +1,4 @@
-# My Electron App
+# Hotel de paso f
 
 Aplicación de escritorio con Electron + Vite + React + Tailwind CSS + Django REST Backend
 
