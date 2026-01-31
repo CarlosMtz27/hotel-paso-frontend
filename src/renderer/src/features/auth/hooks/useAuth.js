@@ -22,21 +22,20 @@ export function useAuth() {
     retry: false,
   })
 
+  // Determinar el rol del usuario
+  const userRole = user?.rol || user?.role || user?.is_staff ? 'admin' : 'empleado'
+
   // Mutation para login
   const loginMutation = useMutation({
     mutationFn: authAPI.login,
     onSuccess: (data) => {
-      // Guardar tokens
       localStorage.setItem('access_token', data.access)
       localStorage.setItem('refresh_token', data.refresh)
       
-      // Iniciar sistema de refresh automático
       startTokenRefresh()
-      
-      // Invalidar queries
       queryClient.invalidateQueries({ queryKey: ['currentUser'] })
       
-      // Redirigir
+      // Redirigir según el rol (lo determinaremos después del refetch)
       navigate('/dashboard')
     },
     onError: (error) => {
@@ -61,7 +60,6 @@ export function useAuth() {
   const registerMutation = useMutation({
     mutationFn: authAPI.register,
     onSuccess: (data) => {
-      // Si devuelve tokens directamente
       if (data.access && data.refresh) {
         localStorage.setItem('access_token', data.access)
         localStorage.setItem('refresh_token', data.refresh)
@@ -70,7 +68,6 @@ export function useAuth() {
         queryClient.invalidateQueries({ queryKey: ['currentUser'] })
         navigate('/dashboard')
       } else {
-        // Si no, redirigir a login
         navigate('/login')
       }
     },
@@ -80,21 +77,13 @@ export function useAuth() {
   const logoutMutation = useMutation({
     mutationFn: authAPI.logout,
     onSuccess: () => {
-      // Detener refresh automático
       stopTokenRefresh()
-      
-      // Limpiar tokens
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
-      
-      // Limpiar caché
       queryClient.clear()
-      
-      // Redirigir
       navigate('/login')
     },
     onError: () => {
-      // Incluso si falla el logout en el backend, limpiar localmente
       stopTokenRefresh()
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
@@ -103,13 +92,12 @@ export function useAuth() {
     },
   })
 
-  // Funciones helper
   const login = (credentials) => {
     return loginMutation.mutate(credentials)
   }
 
-  const loginAsGuest = () => {
-    return loginGuestMutation.mutate()
+  const loginAsGuest = (guestData) => {
+    return loginGuestMutation.mutate(guestData)
   }
 
   const register = (userData) => {
@@ -125,6 +113,7 @@ export function useAuth() {
   return {
     // Estado
     user,
+    userRole, // 'admin' o 'empleado'
     isLoadingUser,
     userError,
     isAuthenticated,

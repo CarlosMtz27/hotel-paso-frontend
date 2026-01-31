@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { Link } from 'react-router-dom'
+import LoginInvitadoModal from '@/features/auth/components/LoginInvitadoModal'
 
 export default function Login() {
   const [credentials, setCredentials] = useState({
@@ -8,7 +9,16 @@ export default function Login() {
     password: '',
   })
 
-  const { login, loginAsGuest, isLoggingIn, isLoggingInAsGuest, loginError, loginGuestError } = useAuth()
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false)
+
+  const { 
+    login, 
+    loginAsGuest, 
+    isLoggingIn, 
+    isLoggingInAsGuest, 
+    loginError, 
+    loginGuestError 
+  } = useAuth()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -22,8 +32,8 @@ export default function Login() {
     })
   }
 
-  const handleGuestLogin = () => {
-    loginAsGuest()
+  const handleGuestLogin = (guestData) => {
+    loginAsGuest(guestData)
   }
 
   return (
@@ -63,14 +73,6 @@ export default function Login() {
                 {loginError.response?.data?.detail || 
                  loginError.response?.data?.message ||
                  'Error al iniciar sesión. Verifica tus credenciales.'}
-              </p>
-            </div>
-          )}
-
-          {loginGuestError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              <p className="text-sm">
-                Error al iniciar sesión como invitado
               </p>
             </div>
           )}
@@ -150,21 +152,11 @@ export default function Login() {
         {/* Guest login button */}
         <button
           type="button"
-          onClick={handleGuestLogin}
-          disabled={isLoggingInAsGuest || isLoggingIn}
+          onClick={() => setIsGuestModalOpen(true)}
+          disabled={isLoggingIn}
           className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mb-6"
         >
-          {isLoggingInAsGuest ? (
-            <span className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Iniciando...
-            </span>
-          ) : (
-            '🚶 Continuar como Invitado'
-          )}
+          🚶 Continuar como Invitado
         </button>
 
         {/* Footer */}
@@ -177,6 +169,15 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      {/* Modal de Login Invitado */}
+      <LoginInvitadoModal
+        isOpen={isGuestModalOpen}
+        onClose={() => setIsGuestModalOpen(false)}
+        onSubmit={handleGuestLogin}
+        isLoading={isLoggingInAsGuest}
+        error={loginGuestError}
+      />
     </div>
   )
 }

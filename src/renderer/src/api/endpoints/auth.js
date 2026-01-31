@@ -2,7 +2,6 @@ import apiClient from '../cliente'
 
 /**
  * Endpoints relacionados con autenticación
- * Rutas basadas en el backend Django
  */
 
 export const authAPI = {
@@ -12,9 +11,9 @@ export const authAPI = {
     return response.data
   },
 
-  // Login como invitado
-  loginGuest: async () => {
-    const response = await apiClient.post('/api/auth/login-invitado/')
+  // Login como invitado (con nombre y clave admin)
+  loginGuest: async (data) => {
+    const response = await apiClient.post('/api/auth/login-invitado/', data)
     return response.data
   },
 
@@ -38,6 +37,12 @@ export const authAPI = {
     const response = await apiClient.post('/api/auth/logout/', {
       refresh: refreshToken,
     })
+    return response.data
+  },
+
+  // Obtener usuario actual
+  getCurrentUser: async () => {
+    const response = await apiClient.get('/api/auth/user/')
     return response.data
   },
 }
