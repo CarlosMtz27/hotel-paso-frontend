@@ -5,16 +5,26 @@ import { useState } from 'react'
 export default function MainLayout() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, logout, isLoggingOut } = useAuth()
+  const { user, userRole, logout, isLoggingOut } = useAuth()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
-  const menuItems = [
+  // Menú completo para admin
+  const adminMenuItems = [
     {
-      name: 'Dashboard',
-      path: '/dashboard',
+      name: 'Dashboard Admin',
+      path: '/dashboard-admin',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      ),
+    },
+    {
+      name: 'Dashboard Empleado',
+      path: '/dashboard-empleado',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
         </svg>
       ),
     },
@@ -92,6 +102,22 @@ export default function MainLayout() {
     },
   ]
 
+  // Menú reducido para empleados/invitados
+  const empleadoMenuItems = [
+    {
+      name: 'Dashboard',
+      path: '/dashboard-empleado',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      ),
+    },
+  ]
+
+  // Seleccionar menú según rol
+  const menuItems = userRole === 'admin' ? adminMenuItems : empleadoMenuItems
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
@@ -156,20 +182,20 @@ export default function MainLayout() {
           {isSidebarOpen ? (
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
-                {user?.first_name?.charAt(0).toUpperCase() || 'U'}
+                {user?.username?.charAt(0).toUpperCase() || 'U'}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {user?.first_name || 'Usuario'}
+                  {user?.username || 'Usuario'}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
-                  {user?.email || ''}
+                  {userRole === 'admin' ? 'Administrador' : 'Empleado'}
                 </p>
               </div>
             </div>
           ) : (
             <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-semibold mx-auto mb-3">
-              {user?.first_name?.charAt(0).toUpperCase() || 'U'}
+              {user?.username?.charAt(0).toUpperCase() || 'U'}
             </div>
           )}
           <button

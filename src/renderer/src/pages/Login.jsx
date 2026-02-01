@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { Link } from 'react-router-dom'
 import LoginInvitadoModal from '@/features/auth/components/LoginInvitadoModal'
+import { SessionChecker } from '@/components/auth/SessionChecker'
 
-export default function Login() {
+function LoginContent() {
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
@@ -162,10 +163,7 @@ export default function Login() {
         {/* Footer */}
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            ¿No tienes cuenta?{' '}
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
-              Regístrate aquí
-            </Link>
+            Solo el administrador puede crear cuentas
           </p>
         </div>
       </div>
@@ -179,5 +177,13 @@ export default function Login() {
         error={loginGuestError}
       />
     </div>
+  )
+}
+
+export default function Login() {
+  return (
+    <SessionChecker>
+      <LoginContent />
+    </SessionChecker>
   )
 }

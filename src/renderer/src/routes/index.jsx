@@ -1,8 +1,12 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from '@/pages/Login'
-import Register from '@/pages/Registro'
-import Dashboard from '@/pages/Dashboard'
+import DashboardSelector from '@/pages/DashboardSelector'
+import DashboardAdmin from '@/pages/DashboardAdmin'
+import DashboardEmpleado from '@/pages/DashboardEmpleado'
 import TiposHabitacion from '@/pages/TiposHabitacion'
+import Habitaciones from '@/pages/Habitaciones'
+import Tarifas from '@/pages/Tarifas'
+import Productos from '../pages/Productos'
 import MainLayout from '@/layouts/MainLayout'
 import ProtectedRoute from './ProtectedRoute'
 
@@ -18,10 +22,6 @@ export const router = createBrowserRouter([
     path: '/login',
     element: <Login />,
   },
-  {
-    path: '/register',
-    element: <Register />,
-  },
   // Rutas con Layout (protegidas)
   {
     element: (
@@ -32,28 +32,35 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/dashboard',
-        element: <Dashboard />,
+        element: <DashboardSelector />,
+      },
+      {
+        path: '/dashboard-admin',
+        element: <DashboardAdmin />,
+      },
+      {
+        path: '/dashboard-empleado',
+        element: <DashboardEmpleado />,
       },
       {
         path: '/tipos-habitacion',
         element: <TiposHabitacion />,
       },
-      // Aquí irán las demás rutas con el layout
       {
         path: '/habitaciones',
-        element: <div className="p-8">Habitaciones - Próximamente</div>,
+        element: <Habitaciones />,
       },
       {
         path: '/tarifas',
-        element: <div className="p-8">Tarifas - Próximamente</div>,
+        element: <Tarifas />,
+      },
+      {
+        path: '/productos',
+        element: <Productos />,
       },
       {
         path: '/estancias',
         element: <div className="p-8">Estancias - Próximamente</div>,
-      },
-      {
-        path: '/productos',
-        element: <div className="p-8">Productos - Próximamente</div>,
       },
       {
         path: '/turnos',

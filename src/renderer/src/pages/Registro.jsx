@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { Link } from 'react-router-dom'
 
-export default function Registro() {
+function RegistroContent() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -241,5 +241,13 @@ export default function Registro() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function Registro() {
+  return (
+    <SessionChecker>
+      <RegistroContent/>      
+    </SessionChecker>
   )
 }

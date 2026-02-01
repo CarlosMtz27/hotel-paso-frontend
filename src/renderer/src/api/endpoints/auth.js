@@ -11,9 +11,12 @@ export const authAPI = {
     return response.data
   },
 
-  // Login como invitado (con nombre y clave admin)
+  // Login como invitado (con nombre y código admin)
   loginGuest: async (data) => {
-    const response = await apiClient.post('/api/auth/login-invitado/', data)
+    const response = await apiClient.post('/api/auth/login-invitado/', {
+      nombre: data.nombre,
+      codigo_admin: data.codigo_admin,
+    })
     return response.data
   },
 

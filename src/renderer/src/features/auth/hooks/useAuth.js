@@ -17,13 +17,41 @@ export function useAuth() {
     error: userError,
   } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: authAPI.getCurrentUser,
+    queryFn: async () => {
+      // Si es invitado, obtener de localStorage
+      const userType = localStorage.getItem('user_type')
+      if (userType === 'invitado') {
+        return {
+          username: localStorage.getItem('invitado_nombre') || 'INVITADO',
+          tipo_usuario: 'invitado',
+          is_staff: false,
+        }
+      }
+      
+      // Si es usuario normal, obtener del backend
+      return await authAPI.getCurrentUser()
+    },
     enabled: !!localStorage.getItem('access_token'),
     retry: false,
   })
 
   // Determinar el rol del usuario
-  const userRole = user?.rol || user?.role || user?.is_staff ? 'admin' : 'empleado'
+  const getUserRole = () => {
+    const userType = localStorage.getItem('user_type')
+    
+    if (userType === 'invitado') {
+      return 'empleado' // Los invitados tienen vista de empleado
+    }
+    
+    // Para usuarios normales, verificar si es admin
+    if (user?.is_staff || user?.is_superuser || user?.rol === 'ADMIN') {
+      return 'admin'
+    }
+    
+    return 'empleado'
+  }
+
+  const userRole = user ? getUserRole() : null
 
   // Mutation para login
   const loginMutation = useMutation({
@@ -31,11 +59,11 @@ export function useAuth() {
     onSuccess: (data) => {
       localStorage.setItem('access_token', data.access)
       localStorage.setItem('refresh_token', data.refresh)
+      localStorage.setItem('user_type', 'normal')
       
       startTokenRefresh()
       queryClient.invalidateQueries({ queryKey: ['currentUser'] })
       
-      // Redirigir según el rol (lo determinaremos después del refetch)
       navigate('/dashboard')
     },
     onError: (error) => {
@@ -46,9 +74,11 @@ export function useAuth() {
   // Mutation para login como invitado
   const loginGuestMutation = useMutation({
     mutationFn: authAPI.loginGuest,
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       localStorage.setItem('access_token', data.access)
       localStorage.setItem('refresh_token', data.refresh)
+      localStorage.setItem('user_type', 'invitado')
+      localStorage.setItem('invitado_nombre', variables.nombre)
       
       startTokenRefresh()
       queryClient.invalidateQueries({ queryKey: ['currentUser'] })
@@ -63,6 +93,7 @@ export function useAuth() {
       if (data.access && data.refresh) {
         localStorage.setItem('access_token', data.access)
         localStorage.setItem('refresh_token', data.refresh)
+        localStorage.setItem('user_type', 'normal')
         
         startTokenRefresh()
         queryClient.invalidateQueries({ queryKey: ['currentUser'] })
@@ -80,6 +111,8 @@ export function useAuth() {
       stopTokenRefresh()
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
+      localStorage.removeItem('user_type')
+      localStorage.removeItem('invitado_nombre')
       queryClient.clear()
       navigate('/login')
     },
@@ -87,6 +120,8 @@ export function useAuth() {
       stopTokenRefresh()
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
+      localStorage.removeItem('user_type')
+      localStorage.removeItem('invitado_nombre')
       queryClient.clear()
       navigate('/login')
     },
