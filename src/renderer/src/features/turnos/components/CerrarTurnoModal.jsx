@@ -22,6 +22,18 @@ export default function CerrarTurnoModal({
   const [errors, setErrors] = useState({})
   const [showMovimientos, setShowMovimientos] = useState(false)
 
+  // Cálculos de totales
+  const totalEstancias = movimientos
+    .filter((m) => m.tipo === 'ESTANCIA')
+    .reduce((sum, m) => sum + parseFloat(m.monto), 0)
+  const totalProductos = movimientos
+    .filter((m) => m.tipo === 'PRODUCTO')
+    .reduce((sum, m) => sum + parseFloat(m.monto), 0)
+  // Se suman todos los movimientos para que coincida con la tabla, independientemente del tipo
+  const totalIngresos = movimientos.reduce((sum, m) => sum + parseFloat(m.monto), 0)
+  const totalSueldo = parseFloat(formData.sueldo) || 0
+  const efectivoEsperado = (parseFloat(turnoActivo?.caja_inicial) || 0) + totalIngresos - totalSueldo
+
   // Resetear el formulario cuando el modal se abre/cierra
   useEffect(() => {
     if (isOpen) {
@@ -142,17 +154,6 @@ export default function CerrarTurnoModal({
     new Date(dateString).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
 
   if (!isOpen) return null
-
-  // Cálculos de totales
-  const totalEstancias = movimientos
-    .filter((m) => m.tipo === 'ESTANCIA')
-    .reduce((sum, m) => sum + parseFloat(m.monto), 0)
-  const totalProductos = movimientos
-    .filter((m) => m.tipo === 'PRODUCTO')
-    .reduce((sum, m) => sum + parseFloat(m.monto), 0)
-  const totalIngresos = totalEstancias + totalProductos
-  const totalSueldo = parseFloat(formData.sueldo) || 0
-  const efectivoEsperado = (turnoActivo?.caja_inicial || 0) + totalIngresos - totalSueldo
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
