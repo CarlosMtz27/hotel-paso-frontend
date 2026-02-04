@@ -50,6 +50,14 @@ export function useHabitaciones() {
     },
   })
 
+  // POST: Marcar como disponible
+  const marcarDisponibleMutation = useMutation({
+    mutationFn: habitacionesAPI.marcarDisponible,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habitaciones'] })
+    }
+  })
+
   return {
     // Datos
     habitaciones: Array.isArray(habitaciones) ? habitaciones : (habitaciones?.results || []),
@@ -63,17 +71,20 @@ export function useHabitaciones() {
     updateHabitacion: updateMutation.mutate,
     toggleActiva: partialUpdateMutation.mutate,
     deleteHabitacion: deleteMutation.mutate,
+    marcarDisponible: marcarDisponibleMutation.mutate,
 
     // Estados de las mutations
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
     isToggling: partialUpdateMutation.isPending,
+    isMarcandoDisponible: marcarDisponibleMutation.isPending,
 
     // Errores de mutations
     createError: createMutation.error,
     updateError: updateMutation.error,
     deleteError: deleteMutation.error,
+    marcarDisponibleError: marcarDisponibleMutation.error
   }
 }
 

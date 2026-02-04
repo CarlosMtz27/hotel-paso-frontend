@@ -78,4 +78,10 @@ export const habitacionesAPI = {
     const response = await apiClient.delete(`/api/habitaciones/${id}/`)
     return response.data
   },
+
+  // POST /api/habitaciones/{id}/marcar-disponible/
+  marcarDisponible: async (id) => {
+    const response = await apiClient.post(`/api/habitaciones/${id}/marcar-disponible/`)
+    return response.data
+  },
 }
