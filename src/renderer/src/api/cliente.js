@@ -32,7 +32,7 @@ apiClient.interceptors.request.use(
 
     // Log en desarrollo
     if (import.meta.env.DEV) {
-      console.log('🚀 Request:', {
+      console.log('Request:', {
         method: config.method?.toUpperCase(),
         url: config.url,
         data: config.data,
@@ -42,7 +42,7 @@ apiClient.interceptors.request.use(
     return config
   },
   (error) => {
-    console.error('❌ Request Error:', error)
+    console.error('Request Error:', error)
     return Promise.reject(error)
   }
 )
@@ -55,7 +55,7 @@ apiClient.interceptors.response.use(
   (response) => {
     // Log en desarrollo
     if (import.meta.env.DEV) {
-      console.log('✅ Response:', {
+      console.log('Response:', {
         status: response.status,
         data: response.data,
       })
@@ -101,7 +101,7 @@ apiClient.interceptors.response.use(
     }
 
     // Manejar otros errores
-    console.error('❌ Response Error:', {
+    console.error('Response Error:', {
       status: error.response?.status,
       message: error.message,
       data: error.response?.data,

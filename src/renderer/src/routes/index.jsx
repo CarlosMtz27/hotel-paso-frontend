@@ -22,6 +22,7 @@ export const ROUTES = {
   ESTANCIAS: '/estancias',
   TURNOS: '/turnos',
   CAJA: '/caja',
+  USUARIOS: '/usuarios',
   REPORTES: '/reportes',
   NOT_FOUND: '*', // Para la ruta 404
 };
@@ -42,6 +43,10 @@ const Tarifas = React.lazy(() => import('@/pages/Tarifas'));
 const Productos = React.lazy(() => import('../pages/Productos'));
 const Turnos = React.lazy(() => import('@/pages/Turnos'));
 const Estancias = React.lazy(() => import('@/pages/Estancias'));
+const Caja = React.lazy(() => import('@/pages/Caja'));
+const Usuarios = React.lazy(() => import('@/pages/Usuarios'));
+const Reportes = React.lazy(() => import('@/pages/Reportes'));
+
 
 
 /**
@@ -118,11 +123,14 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.CAJA,
-        element: <div className="p-8">Caja - Próximamente</div>,
+        element: <LazyElement Component={Caja} />,},
+      {
+        path: ROUTES.USUARIOS,
+        element: <LazyElement Component={Usuarios} />,
       },
       {
         path: ROUTES.REPORTES,
-        element: <div className="p-8">Reportes - Próximamente</div>,
+        element: <LazyElement Component={Reportes} />,
       },
     ],
   },

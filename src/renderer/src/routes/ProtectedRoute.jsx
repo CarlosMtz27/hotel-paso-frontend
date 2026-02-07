@@ -9,9 +9,11 @@ export default function ProtectedRoute({ children }) {
   
   // Si no hay token, redirigir a login
   if (!token) {
+    window.electron?.setLoginWindow()
     return <Navigate to="/login" replace />
   }
   
+   window.electron?.setAuthWindow()
   // Si hay token, mostrar el componente hijo
   return children
 }
