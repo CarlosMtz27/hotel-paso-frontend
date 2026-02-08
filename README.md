@@ -12,7 +12,7 @@ Aplicación de escritorio con Electron + Vite + React + Tailwind CSS + Django RE
 
 1. Clonar el repositorio:
 ```bash
-git clone <tu-repo-url>
+git clone https://github.com/CarlosMtz27/hotel-paso-frontend
 cd my-electron-app
 ```
 
