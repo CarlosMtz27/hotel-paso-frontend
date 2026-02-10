@@ -75,7 +75,7 @@ export default function Turnos() {
                 turnos.map((turno) => (
                   <tr key={turno.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{turno.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{turno.usuario_nombre || 'N/A'} ({turno.usuario_rol || 'N/A'})</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{turno.usuario.first_name || 'N/A'} ({turno.usuario.rol || 'N/A'})</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{turno.tipo_turno}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{formatDate(turno.fecha_inicio)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{formatDate(turno.fecha_fin)}</td>

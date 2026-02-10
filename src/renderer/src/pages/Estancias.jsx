@@ -250,7 +250,7 @@ export default function Estancias() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-semibold text-green-600">
-                          {formatPrecio(estancia.total)}
+                          {formatPrecio(estancia.tarifa.precio)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
