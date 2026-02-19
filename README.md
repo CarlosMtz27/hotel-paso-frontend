@@ -1,4 +1,4 @@
-# Hotel de paso f
+# Hotel de paso 
 
 Aplicación de escritorio con Electron + Vite + React + Tailwind CSS + Django REST Backend
 
@@ -68,13 +68,6 @@ src/
 - `npm run build` - Build de producción
 - `npm run lint` - Verificar código
 - `npm run preview` - Preview del build
-
-## 🤝 Contribuir
-
-1. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
-2. Commit cambios: `git commit -m 'Agregar nueva funcionalidad'`
-3. Push a la rama: `git push origin feature/nueva-funcionalidad`
-4. Crear Pull Request
 
 ## 📝 Convenciones
 
